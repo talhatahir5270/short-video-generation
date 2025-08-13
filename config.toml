@@ -1,0 +1,62 @@
+[app]
+hide_config = false
+pixabay_api_keys = []
+llm_provider = "ollama"
+pollinations_api_key = ""
+pollinations_base_url = "https://pollinations.ai/api/v1"
+pollinations_model_name = "openai-fast"
+ollama_base_url = "http://localhost:11434/v1"
+ollama_model_name = "deepseek-r1:7b"
+openai_api_key = ""
+openai_base_url = ""
+openai_model_name = ""
+moonshot_api_key = ""
+moonshot_base_url = ""
+moonshot_model_name = ""
+oneapi_api_key = ""
+oneapi_base_url = ""
+oneapi_model_name = ""
+g4f_model_name = ""
+azure_api_key = ""
+azure_base_url = ""
+azure_model_name = ""
+azure_api_version = ""
+gemini_api_key = ""
+gemini_model_name = ""
+qwen_api_key = ""
+qwen_model_name = ""
+deepseek_api_key = ""
+deepseek_base_url = "https://api.deepseek.com"
+deepseek_model_name = "deepseek-chat"
+subtitle_provider = "edge"
+endpoint = ""
+material_directory = ""
+enable_redis = false
+redis_host = "localhost"
+redis_port = 6379
+redis_db = 0
+redis_password = ""
+max_concurrent_tasks = 5
+
+[whisper]
+model_size = "large-v3"
+device = "CPU"
+compute_type = "int8"
+
+[proxy]
+
+[azure]
+speech_key = ""
+speech_region = ""
+
+[siliconflow]
+api_key = ""
+
+[ui]
+hide_log = false
+language = "en"
+tts_server = "azure-tts-v1"
+voice_name = "en-AU-NatashaNeural-Female"
+font_name = "MicrosoftYaHeiBold.ttc"
+text_fore_color = "#FFFFFF"
+font_size = 55
