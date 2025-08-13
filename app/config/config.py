@@ -1,16 +1,41 @@
 import os
 import shutil
 import socket
-
 import toml
+import streamlit as st
 from loguru import logger
 
 root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 config_file = f"{root_dir}/config.toml"
 
-
 def load_config():
-    # fix: IsADirectoryError: [Errno 21] Is a directory: '/MoneyPrinterTurbo/config.toml'
+    # If running on Streamlit Cloud, try to load config from secrets
+    if "PEXELS_API_KEY" in st.secrets:
+        logger.info("Loading config from Streamlit secrets")
+        # Build minimal config dict from secrets
+        config_from_secrets = {
+            "app": {
+                "video_source": st.secrets.get("VIDEO_SOURCE", "pexels"),
+                "pexels_api_keys": [st.secrets["PEXELS_API_KEY"]],
+                "pixabay_api_keys": [],
+                "ollama_base_url": st.secrets.get("OLLAMA_BASE_URL", ""),
+                "ollama_model_name": st.secrets.get("OLLAMA_MODEL_NAME", ""),
+                "imagemagick_path": "",
+                "ffmpeg_path": "",
+                # add other keys if needed
+            },
+            "whisper": {
+                "model_size": st.secrets.get("WHISPER_MODEL_SIZE", "large-v3"),
+                "device": st.secrets.get("WHISPER_DEVICE", "CPU"),
+                "compute_type": st.secrets.get("WHISPER_COMPUTE_TYPE", "int8"),
+            },
+            "ui": {
+                "hide_log": False,
+            },
+        }
+        return config_from_secrets
+
+    # Local environment: fix directory config file issue if needed
     if os.path.isdir(config_file):
         shutil.rmtree(config_file)
 
@@ -18,27 +43,18 @@ def load_config():
         example_file = f"{root_dir}/config.example.toml"
         if os.path.isfile(example_file):
             shutil.copyfile(example_file, config_file)
-            logger.info("copy config.example.toml to config.toml")
+            logger.info("Copied config.example.toml to config.toml")
 
-    logger.info(f"load config from file: {config_file}")
+    logger.info(f"Loading config from file: {config_file}")
 
     try:
         _config_ = toml.load(config_file)
     except Exception as e:
-        logger.warning(f"load config failed: {str(e)}, try to load as utf-8-sig")
+        logger.warning(f"Load config failed: {str(e)}, trying utf-8-sig")
         with open(config_file, mode="r", encoding="utf-8-sig") as fp:
             _cfg_content = fp.read()
             _config_ = toml.loads(_cfg_content)
     return _config_
-
-
-def save_config():
-    with open(config_file, "w", encoding="utf-8") as f:
-        _cfg["app"] = app
-        _cfg["azure"] = azure
-        _cfg["siliconflow"] = siliconflow
-        _cfg["ui"] = ui
-        f.write(toml.dumps(_cfg))
 
 
 _cfg = load_config()
